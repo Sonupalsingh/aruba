@@ -1,0 +1,34 @@
+---
+- name: Fetch and save Aruba AOS-CX config locally
+  hosts: all
+  connection: network_cli
+  gather_facts: no
+
+  vars:
+    backup_dir: /root/switch_backups
+    timestamp: "{{ lookup('pipe', 'date +%Y%m%d_%H%M%S') }}"
+    backup_file: "{{ backup_dir }}/{{ inventory_hostname }}_{{ timestamp }}.cfg"
+
+  tasks:
+    - name: Ensure backup directory exists
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: Run show running-config on switch
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show running-config
+      register: switch_output
+
+    - name: Save running-config output to local file
+      copy:
+        content: "{{ switch_output.stdout[0] }}"
+        dest: "{{ backup_file }}"
+      delegate_to: localhost
+
+    - name: Confirm backup saved
+      debug:
+        msg: "Backup saved to {{ backup_file }}"
