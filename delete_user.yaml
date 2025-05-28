@@ -1,0 +1,15 @@
+- name: Delete user on Aruba AOS-CX
+  hosts: all
+  connection: network_cli
+  gather_facts: no
+
+  vars_prompt:
+    - name: username
+      prompt: "Enter the username to delete"
+      private: no
+
+  tasks:
+    - name: Delete user (correct AOS-CX CLI)
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - no local-user {{ username }}
