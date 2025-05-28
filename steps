@@ -1,0 +1,5 @@
+export ANSIBLE_HOST_KEY_CHECKING=False
+
+
+[defaults]
+host_key_checking = False
