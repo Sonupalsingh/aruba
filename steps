@@ -1,5 +1,7 @@
 yum install -y python3-pip
 
+python3.11 -m pip install paramiko
+python3.11 -m pip install ansible-pylibssh
 
 ansible-galaxy collection install arubanetworks.aoscx
 
