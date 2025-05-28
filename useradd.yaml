@@ -1,0 +1,24 @@
+- name: Add a user on Aruba AOS-CX switch
+  hosts: all
+  connection: network_cli
+  gather_facts: no
+
+  vars_prompt:
+    - name: "username"
+      prompt: "Enter the username to add"
+      private: no
+
+    - name: "password"
+      prompt: "Enter the plaintext password"
+      private: yes
+
+    - name: "group"
+      prompt: "Enter the user group (e.g., administrators)"
+      private: no
+      default: administrators
+
+  tasks:
+    - name: Add user "{{ username }}"
+      arubanetworks.aoscx.aoscx_config:
+        lines:
+          - user {{ username }} group {{ group }} password plaintext {{ password }}
